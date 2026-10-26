@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-orange: #F97316;
+  --color-brand-burnt: #C2410C;
+  --color-brand-apricot: #FDBA74;
+  --color-brand-peach: #FFEDD5;
+  --color-ivory: #FFFDF8;
+  --color-cream: #FFF7ED;
+  --color-sand: #EDE3D8;
+  --color-charcoal: #302923;
+  --color-charcoal-warm: #3A332E;
+  --color-taupe: #8B7D70;
+  --color-warm-grey: #F5EFEB;
+  --color-warm-border: #E8DDD2;
+  --color-success: #27864B;
+  --color-error: #C83B32;
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Custom Base Styles */
+body {
+  font-family: var(--font-sans);
+  background-color: #FFFDF8;
+  color: #302923;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Custom print styles for the Digital Parking Ticket and receipts */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printable-area, .printable-area * {
+    visibility: visible;
+  }
+  .printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F5EFEB;
+}
+::-webkit-scrollbar-thumb {
+  background: #E8DDD2;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F97316;
+}
