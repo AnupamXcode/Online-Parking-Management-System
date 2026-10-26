@@ -2,16 +2,34 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 
-const dbDir = path.resolve(__dirname);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+const isVercel = process.env.VERCEL === '1' || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+let dbPath;
+
+if (isVercel) {
+  const tmpDb = path.join('/tmp', 'parkease.db');
+  const sourceDb = path.join(__dirname, 'parkease.db');
+  if (!fs.existsSync(tmpDb) && fs.existsSync(sourceDb)) {
+    try {
+      fs.copyFileSync(sourceDb, tmpDb);
+    } catch (e) {
+      console.warn('Could not copy initial db to /tmp, will initialize fresh:', e);
+    }
+  }
+  dbPath = tmpDb;
+} else {
+  const dbDir = path.resolve(__dirname);
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+  dbPath = process.env.DATABASE_PATH || path.join(dbDir, 'parkease.db');
 }
 
-const dbPath = process.env.DATABASE_PATH || path.join(dbDir, 'parkease.db');
 const db = new Database(dbPath);
 
 // Enable WAL mode and foreign key constraints for integrity and concurrency
-db.pragma('journal_mode = WAL');
+if (!isVercel) {
+  db.pragma('journal_mode = WAL');
+}
 db.pragma('foreign_keys = ON');
 
 // Initialize database schema
